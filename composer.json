@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "/azure-laravel-storage",
+    "description": "This is my package azure-laravel-storage",
     "keywords": [
-        ":vendor_name",
+        "Ashraf Amir",
         "laravel",
-        ":package_slug"
+        "azure-laravel-storage"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com//azure-laravel-storage",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Ashraf Amir",
+            "email": "ashrafahmadamir@gmai.com",
             "role": "Developer"
         }
     ],
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Ashraf Amir\\AzureLaravelStorage\\": "src/",
+            "Ashraf Amir\\AzureLaravelStorage\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Ashraf Amir\\AzureLaravelStorage\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Ashraf Amir\\AzureLaravelStorage\\AzureLaravelStorageServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "AzureLaravelStorage": "Ashraf Amir\\AzureLaravelStorage\\Facades\\AzureLaravelStorage"
             }
         }
     },

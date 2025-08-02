@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Ashraf Amir\AzureLaravelStorage\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class AzureLaravelStorageCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'azure-laravel-storage';
 
     public $description = 'My command';
 
