@@ -277,7 +277,7 @@ class AzureLaravelStorage
             $headers = $this->buildHeaders('PUT', $container, '', [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
                 'x-ms-version' => '2023-11-03',
-                'x-ms-blob-public-access' => $this->config['visibility'] === 'public' ? 'container' : 'private'
+                'x-ms-blob-public-access' => ($this->config['visibility'] ?? 'public') === 'public' ? 'container' : 'private'
             ]);
 
             $response = $this->httpClient->put($url, [

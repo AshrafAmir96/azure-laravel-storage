@@ -1,4 +1,14 @@
-# Azure Laravel Storage
+# Azure Lar- 🎯 **Pure REST API Implementation** - Uses official Azure Blob Storage REST API (v2023-11-03)
+- 🚀 **Zero Dependencies** - No deprecated Azure SDKs, only GuzzleHTTP for HTTP requests
+- 🔐 **Multiple Authentication Methods** - Account Key, SAS Token support
+- 📁 **Complete Blob Operations** - Upload, download, delete, list, copy, properties
+- 🛡️ **Secure by Design** - Proper Azure authentication headers and request signing
+- 📊 **Built-in Logging** - Comprehensive operation logging and error handling
+- 🎯 **Automatic Content Type Detection** - Smart MIME type detection
+- 📋 **Metadata Management** - Full support for blob metadata operations
+- ⚡ **Performance Optimized** - Configurable timeouts and SSL verification
+- 🎨 **Laravel Integration** - Facades, service providers, and dependency injection
+- 🧪 **Future Proof** - Direct REST API calls ensure longevitye
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/owlfice/azure-laravel-storage.svg?style=flat-square)](https://packagist.org/packages/owlfice/azure-laravel-storage)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/owlfice/azure-laravel-storage/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/owlfice/azure-laravel-storage/actions?query=workflow%3Arun-tests+branch%3Amain)

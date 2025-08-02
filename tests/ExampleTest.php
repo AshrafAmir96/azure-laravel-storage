@@ -26,6 +26,7 @@ class ExampleTest extends TestCase
             'account_key' => base64_encode('test-key'),
             'container' => 'test-container',
             'endpoint' => 'https://testaccount.blob.core.windows.net',
+            'visibility' => 'public',
             'timeout' => 300,
             'verify_ssl' => true
         ];
