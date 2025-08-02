@@ -2,9 +2,9 @@
 
 namespace Owlfice\AzureLaravelStorage;
 
+use Owlfice\AzureLaravelStorage\Commands\AzureLaravelStorageCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Owlfice\AzureLaravelStorage\Commands\AzureLaravelStorageCommand;
 
 class AzureLaravelStorageServiceProvider extends PackageServiceProvider
 {
