@@ -1,12 +1,12 @@
 {
-    "name": "/azure-laravel-storage",
+    "name": "owlfice/azure-laravel-storage",
     "description": "This is my package azure-laravel-storage",
     "keywords": [
-        "Ashraf Amir",
+        "Owlfice",
         "laravel",
         "azure-laravel-storage"
     ],
-    "homepage": "https://github.com//azure-laravel-storage",
+    "homepage": "https://github.com/owlfice/azure-laravel-storage",
     "license": "MIT",
     "authors": [
         {
