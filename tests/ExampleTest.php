@@ -2,25 +2,26 @@
 
 namespace Owlfice\AzureLaravelStorage\Tests;
 
-use Owlfice\AzureLaravelStorage\AzureLaravelStorage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Owlfice\AzureLaravelStorage\AzureLaravelStorage;
 
 class ExampleTest extends TestCase
 {
     protected AzureLaravelStorage $storage;
+
     protected MockHandler $mockHandler;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
-        $this->mockHandler = new MockHandler();
+
+        $this->mockHandler = new MockHandler;
         $handlerStack = HandlerStack::create($this->mockHandler);
         $httpClient = new Client(['handler' => $handlerStack]);
-        
+
         $config = [
             'account_name' => 'testaccount',
             'account_key' => base64_encode('test-key'),
@@ -28,11 +29,11 @@ class ExampleTest extends TestCase
             'endpoint' => 'https://testaccount.blob.core.windows.net',
             'visibility' => 'public',
             'timeout' => 300,
-            'verify_ssl' => true
+            'verify_ssl' => true,
         ];
-        
+
         $this->storage = new AzureLaravelStorage($config);
-        
+
         // Use reflection to replace the HTTP client with our mock
         $reflection = new \ReflectionClass($this->storage);
         $httpClientProperty = $reflection->getProperty('httpClient');
@@ -130,7 +131,7 @@ class ExampleTest extends TestCase
                 'Last-Modified' => 'Mon, 01 Jan 2024 00:00:00 GMT',
                 'ETag' => '"0x8D123456789ABCD"',
                 'x-ms-meta-uploaded-by' => 'Laravel',
-                'x-ms-meta-environment' => 'testing'
+                'x-ms-meta-environment' => 'testing',
             ])
         );
 
@@ -159,7 +160,7 @@ class ExampleTest extends TestCase
     public function it_generates_correct_blob_urls()
     {
         $url = $this->storage->url('test-file.txt');
-        
+
         $this->assertEquals(
             'https://testaccount.blob.core.windows.net/test-container/test-file.txt',
             $url

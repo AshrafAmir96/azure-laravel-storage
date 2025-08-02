@@ -2,23 +2,29 @@
 
 namespace Owlfice\AzureLaravelStorage;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\UploadedFile;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AzureLaravelStorage
 {
     protected Client $httpClient;
+
     protected array $config;
+
     protected string $defaultContainer;
+
     protected string $accountName;
+
     protected string $accountKey;
+
     protected ?string $sasToken;
+
     protected string $baseUrl;
 
-    public function __construct(array $config = null)
+    public function __construct(?array $config = null)
     {
         $this->config = $config ?? config('azure-laravel-storage.connections.azure');
         $this->defaultContainer = $this->config['container'] ?? 'default';
@@ -26,7 +32,7 @@ class AzureLaravelStorage
         $this->accountKey = $this->config['account_key'] ?? null;
         $this->sasToken = $this->config['sas_token'] ?? null;
         $this->baseUrl = $this->config['endpoint'] ?? "https://{$this->accountName}.blob.core.windows.net";
-        
+
         $this->httpClient = new Client([
             'timeout' => $this->config['timeout'] ?? 300,
             'verify' => $this->config['verify_ssl'] ?? true,
@@ -36,11 +42,11 @@ class AzureLaravelStorage
     /**
      * Upload a file to Azure Blob Storage using REST API
      */
-    public function upload(string $path, $content, string $container = null, array $options = []): bool
+    public function upload(string $path, $content, ?string $container = null, array $options = []): bool
     {
         try {
             $container = $container ?? $this->defaultContainer;
-            
+
             // Ensure container exists
             $this->createContainerIfNotExists($container);
 
@@ -61,7 +67,7 @@ class AzureLaravelStorage
                 'Content-Length' => strlen($content),
                 'x-ms-blob-type' => 'BlockBlob',
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             // Add custom metadata
@@ -69,21 +75,21 @@ class AzureLaravelStorage
                 config('azure-laravel-storage.default_metadata', []),
                 $options['metadata'] ?? []
             );
-            
+
             foreach ($metadata as $key => $value) {
                 $headers["x-ms-meta-{$key}"] = $value;
             }
 
             $response = $this->httpClient->put($url, [
                 'headers' => $headers,
-                'body' => $content
+                'body' => $content,
             ]);
 
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::info("File uploaded successfully via REST API", [
-                    'path' => $path, 
+                Log::info('File uploaded successfully via REST API', [
+                    'path' => $path,
                     'container' => $container,
-                    'size' => strlen($content)
+                    'size' => strlen($content),
                 ]);
             }
 
@@ -91,11 +97,11 @@ class AzureLaravelStorage
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to upload file via REST API", [
+                Log::error('Failed to upload file via REST API', [
                     'path' => $path,
                     'container' => $container,
                     'error' => $e->getMessage(),
-                    'response' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null
+                    'response' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null,
                 ]);
             }
             throw $e;
@@ -105,29 +111,29 @@ class AzureLaravelStorage
     /**
      * Download a file from Azure Blob Storage using REST API
      */
-    public function download(string $path, string $container = null): string
+    public function download(string $path, ?string $container = null): string
     {
         try {
             $container = $container ?? $this->defaultContainer;
             $url = "{$this->baseUrl}/{$container}/{$path}";
-            
+
             $headers = $this->buildHeaders('GET', $container, $path, [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             $response = $this->httpClient->get($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
-            
+
             return $response->getBody()->getContents();
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to download file via REST API", [
+                Log::error('Failed to download file via REST API', [
                     'path' => $path,
                     'container' => $container,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
             throw $e;
@@ -137,25 +143,25 @@ class AzureLaravelStorage
     /**
      * Delete a file from Azure Blob Storage using REST API
      */
-    public function delete(string $path, string $container = null): bool
+    public function delete(string $path, ?string $container = null): bool
     {
         try {
             $container = $container ?? $this->defaultContainer;
             $url = "{$this->baseUrl}/{$container}/{$path}";
-            
+
             $headers = $this->buildHeaders('DELETE', $container, $path, [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             $response = $this->httpClient->delete($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::info("File deleted successfully via REST API", [
-                    'path' => $path, 
-                    'container' => $container
+                Log::info('File deleted successfully via REST API', [
+                    'path' => $path,
+                    'container' => $container,
                 ]);
             }
 
@@ -163,10 +169,10 @@ class AzureLaravelStorage
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to delete file via REST API", [
+                Log::error('Failed to delete file via REST API', [
                     'path' => $path,
                     'container' => $container,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
             throw $e;
@@ -176,19 +182,19 @@ class AzureLaravelStorage
     /**
      * Check if a file exists in Azure Blob Storage using REST API
      */
-    public function exists(string $path, string $container = null): bool
+    public function exists(string $path, ?string $container = null): bool
     {
         try {
             $container = $container ?? $this->defaultContainer;
             $url = "{$this->baseUrl}/{$container}/{$path}";
-            
+
             $headers = $this->buildHeaders('HEAD', $container, $path, [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             $response = $this->httpClient->head($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             return $response->getStatusCode() === 200;
@@ -201,7 +207,7 @@ class AzureLaravelStorage
     /**
      * Get the URL of a blob
      */
-    public function url(string $path, string $container = null): string
+    public function url(string $path, ?string $container = null): string
     {
         $container = $container ?? $this->defaultContainer;
         $baseUrl = $this->config['url'] ?? $this->baseUrl;
@@ -212,29 +218,29 @@ class AzureLaravelStorage
     /**
      * List blobs in a container using REST API
      */
-    public function list(string $container = null, string $prefix = '', int $maxResults = 5000): array
+    public function list(?string $container = null, string $prefix = '', int $maxResults = 5000): array
     {
         try {
             $container = $container ?? $this->defaultContainer;
             $queryParams = [
                 'restype' => 'container',
                 'comp' => 'list',
-                'maxresults' => $maxResults
+                'maxresults' => $maxResults,
             ];
-            
+
             if ($prefix) {
                 $queryParams['prefix'] = $prefix;
             }
 
-            $url = "{$this->baseUrl}/{$container}?" . http_build_query($queryParams);
-            
+            $url = "{$this->baseUrl}/{$container}?".http_build_query($queryParams);
+
             $headers = $this->buildHeaders('GET', $container, '', [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             $response = $this->httpClient->get($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             $xml = simplexml_load_string($response->getBody()->getContents());
@@ -257,9 +263,9 @@ class AzureLaravelStorage
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to list blobs via REST API", [
+                Log::error('Failed to list blobs via REST API', [
                     'container' => $container,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
             throw $e;
@@ -273,15 +279,15 @@ class AzureLaravelStorage
     {
         try {
             $url = "{$this->baseUrl}/{$container}?restype=container";
-            
+
             $headers = $this->buildHeaders('PUT', $container, '', [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
                 'x-ms-version' => '2023-11-03',
-                'x-ms-blob-public-access' => ($this->config['visibility'] ?? 'public') === 'public' ? 'container' : 'private'
+                'x-ms-blob-public-access' => ($this->config['visibility'] ?? 'public') === 'public' ? 'container' : 'private',
             ]);
 
             $response = $this->httpClient->put($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             return in_array($response->getStatusCode(), [201, 409]); // 201 = created, 409 = already exists
@@ -298,19 +304,19 @@ class AzureLaravelStorage
     /**
      * Get blob properties using REST API
      */
-    public function getProperties(string $path, string $container = null): array
+    public function getProperties(string $path, ?string $container = null): array
     {
         try {
             $container = $container ?? $this->defaultContainer;
             $url = "{$this->baseUrl}/{$container}/{$path}";
-            
+
             $headers = $this->buildHeaders('HEAD', $container, $path, [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-                'x-ms-version' => '2023-11-03'
+                'x-ms-version' => '2023-11-03',
             ]);
 
             $response = $this->httpClient->head($url, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             $responseHeaders = $response->getHeaders();
@@ -334,10 +340,10 @@ class AzureLaravelStorage
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to get blob properties via REST API", [
+                Log::error('Failed to get blob properties via REST API', [
                     'path' => $path,
                     'container' => $container,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
             throw $e;
@@ -347,31 +353,31 @@ class AzureLaravelStorage
     /**
      * Copy a blob using REST API
      */
-    public function copy(string $sourcePath, string $destinationPath, string $sourceContainer = null, string $destinationContainer = null): bool
+    public function copy(string $sourcePath, string $destinationPath, ?string $sourceContainer = null, ?string $destinationContainer = null): bool
     {
         try {
             $sourceContainer = $sourceContainer ?? $this->defaultContainer;
             $destinationContainer = $destinationContainer ?? $this->defaultContainer;
-            
+
             $sourceUrl = "{$this->baseUrl}/{$sourceContainer}/{$sourcePath}";
             $destinationUrl = "{$this->baseUrl}/{$destinationContainer}/{$destinationPath}";
-            
+
             $headers = $this->buildHeaders('PUT', $destinationContainer, $destinationPath, [
                 'x-ms-date' => gmdate('D, d M Y H:i:s T'),
                 'x-ms-version' => '2023-11-03',
-                'x-ms-copy-source' => $sourceUrl
+                'x-ms-copy-source' => $sourceUrl,
             ]);
 
             $response = $this->httpClient->put($destinationUrl, [
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::info("File copied successfully via REST API", [
+                Log::info('File copied successfully via REST API', [
                     'source' => $sourcePath,
                     'destination' => $destinationPath,
                     'source_container' => $sourceContainer,
-                    'destination_container' => $destinationContainer
+                    'destination_container' => $destinationContainer,
                 ]);
             }
 
@@ -379,10 +385,10 @@ class AzureLaravelStorage
 
         } catch (RequestException $e) {
             if (config('azure-laravel-storage.logging.enabled', true)) {
-                Log::error("Failed to copy file via REST API", [
+                Log::error('Failed to copy file via REST API', [
                     'source' => $sourcePath,
                     'destination' => $destinationPath,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
             throw $e;
@@ -396,7 +402,7 @@ class AzureLaravelStorage
     {
         $headers = array_merge([
             'x-ms-date' => gmdate('D, d M Y H:i:s T'),
-            'x-ms-version' => '2023-11-03'
+            'x-ms-version' => '2023-11-03',
         ], $additionalHeaders);
 
         // If using SAS token, don't add Authorization header
@@ -419,7 +425,7 @@ class AzureLaravelStorage
     {
         $canonicalizedHeaders = $this->buildCanonicalizedHeaders($headers);
         $canonicalizedResource = $this->buildCanonicalizedResource($container, $path);
-        
+
         $stringToSign = implode("\n", [
             strtoupper($method),
             $headers['Content-Encoding'] ?? '',
@@ -434,11 +440,11 @@ class AzureLaravelStorage
             $headers['If-Unmodified-Since'] ?? '',
             $headers['Range'] ?? '',
             $canonicalizedHeaders,
-            $canonicalizedResource
+            $canonicalizedResource,
         ]);
 
         $signature = base64_encode(hash_hmac('sha256', $stringToSign, base64_decode($this->accountKey), true));
-        
+
         return "SharedKey {$this->accountName}:{$signature}";
     }
 
@@ -448,21 +454,21 @@ class AzureLaravelStorage
     protected function buildCanonicalizedHeaders(array $headers): string
     {
         $canonicalizedHeaders = [];
-        
+
         foreach ($headers as $key => $value) {
             $key = strtolower($key);
             if (strpos($key, 'x-ms-') === 0) {
                 $canonicalizedHeaders[$key] = $value;
             }
         }
-        
+
         ksort($canonicalizedHeaders);
-        
+
         $result = [];
         foreach ($canonicalizedHeaders as $key => $value) {
-            $result[] = $key . ':' . $value;
+            $result[] = $key.':'.$value;
         }
-        
+
         return implode("\n", $result);
     }
 
@@ -475,6 +481,7 @@ class AzureLaravelStorage
         if ($path) {
             $resource .= "/{$path}";
         }
+
         return $resource;
     }
 
@@ -484,7 +491,7 @@ class AzureLaravelStorage
     protected function detectContentType(string $path): string
     {
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        
+
         $mimeTypes = [
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
