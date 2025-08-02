@@ -1,5 +1,5 @@
 <?php
 
-use Ashraf Amir\AzureLaravelStorage\Tests\TestCase;
+use Owlfice\AzureLaravelStorage\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

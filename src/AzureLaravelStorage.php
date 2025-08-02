@@ -1,5 +1,5 @@
 <?php
 
-namespace Ashraf Amir\AzureLaravelStorage;
+namespace Owlfice\AzureLaravelStorage;
 
 class AzureLaravelStorage {}

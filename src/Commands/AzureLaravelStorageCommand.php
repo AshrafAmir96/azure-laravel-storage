@@ -1,6 +1,6 @@
 <?php
 
-namespace Ashraf Amir\AzureLaravelStorage\Commands;
+namespace Owlfice\AzureLaravelStorage\Commands;
 
 use Illuminate\Console\Command;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Ashraf Amir\AzureLaravelStorage\Tests;
+namespace Owlfice\AzureLaravelStorage\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Ashraf Amir\AzureLaravelStorage\AzureLaravelStorageServiceProvider;
+use Owlfice\AzureLaravelStorage\AzureLaravelStorageServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Ashraf Amir\\AzureLaravelStorage\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Owlfice\\AzureLaravelStorage\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 

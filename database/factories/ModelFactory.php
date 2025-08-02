@@ -1,6 +1,6 @@
 <?php
 
-namespace Ashraf Amir\AzureLaravelStorage\Database\Factories;
+namespace Owlfice\AzureLaravelStorage\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
