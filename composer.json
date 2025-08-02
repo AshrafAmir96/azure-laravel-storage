@@ -1,10 +1,13 @@
 {
     "name": "owlfice/azure-laravel-storage",
-    "description": "This is my package azure-laravel-storage",
+    "description": "Laravel wrapper for Azure Blob Storage REST API - modern, lightweight, and future-proof",
     "keywords": [
         "Owlfice",
         "laravel",
-        "azure-laravel-storage"
+        "azure-laravel-storage",
+        "azure-blob-storage",
+        "azure-rest-api",
+        "cloud-storage"
     ],
     "homepage": "https://github.com/owlfice/azure-laravel-storage",
     "license": "MIT",
@@ -16,9 +19,10 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.1",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0||^12.0"
+        "illuminate/contracts": "^10.0||^11.0||^12.0",
+        "guzzlehttp/guzzle": "^7.5"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -35,13 +39,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Ashraf Amir\\AzureLaravelStorage\\": "src/",
-            "Ashraf Amir\\AzureLaravelStorage\\Database\\Factories\\": "database/factories/"
+            "Owlfice\\AzureLaravelStorage\\": "src/",
+            "Owlfice\\AzureLaravelStorage\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ashraf Amir\\AzureLaravelStorage\\Tests\\": "tests/",
+            "Owlfice\\AzureLaravelStorage\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +67,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ashraf Amir\\AzureLaravelStorage\\AzureLaravelStorageServiceProvider"
+                "Owlfice\\AzureLaravelStorage\\AzureLaravelStorageServiceProvider"
             ],
             "aliases": {
-                "AzureLaravelStorage": "Ashraf Amir\\AzureLaravelStorage\\Facades\\AzureLaravelStorage"
+                "AzureLaravelStorage": "Owlfice\\AzureLaravelStorage\\Facades\\AzureLaravelStorage"
             }
         }
     },
